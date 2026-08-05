@@ -5,6 +5,11 @@ on:
     # Monday 00:00 UTC = Monday 08:00 SGT
     - cron: "0 0 * * 1"
   workflow_dispatch:
+    inputs:
+      skip_refresh:
+        description: "Republish the current page without regenerating it"
+        type: boolean
+        default: false
 
 concurrency:
   group: digest
@@ -12,6 +17,9 @@ concurrency:
 
 jobs:
   refresh:
+    # Skipped when dispatched with skip_refresh, which republishes the committed
+    # page as-is. Scheduled runs always regenerate.
+    if: ${{ !inputs.skip_refresh }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -74,6 +82,9 @@ jobs:
 
   deploy:
     needs: refresh
+    # Publish when the refresh succeeded, or when it was deliberately skipped.
+    # A failed generation must not reach Pages — the previous page stays live.
+    if: ${{ always() && (needs.refresh.result == 'success' || needs.refresh.result == 'skipped') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read

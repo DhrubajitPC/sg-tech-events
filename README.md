@@ -22,8 +22,16 @@ committed and the previous week's page stays live.
 
 ## Running it by hand
 
+A full run — research, validate, commit, deploy:
+
 ```bash
 gh workflow run digest.yml -R DhrubajitPC/sg-tech-events
+```
+
+Republish the committed page without spending a Copilot run:
+
+```bash
+gh workflow run digest.yml -R DhrubajitPC/sg-tech-events -f skip_refresh=true
 ```
 
 ## Validating a local edit

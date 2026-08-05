@@ -30,6 +30,15 @@ the `data-updated` stamp, and runs the validator itself before finishing. The
 job then re-runs the validator independently, commits `site/index.html` if it
 changed, and the `deploy` job publishes `site/` to Pages.
 
+`deploy` runs when `refresh` succeeded *or* was skipped, and never when it
+failed. The skipped case is the `skip_refresh` dispatch input, which republishes
+whatever is committed without spending a Copilot run — useful after editing the
+page by hand, or to get a first deploy out before the secret exists:
+
+```bash
+gh workflow run digest.yml -R DhrubajitPC/sg-tech-events -f skip_refresh=true
+```
+
 ## Why the validator exists
 
 An unattended generator will eventually produce something wrong: an empty
