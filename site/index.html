@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Singapore Tech Events</title>
+<meta name="description" content="A weekly digest of technology meetups and conferences in Singapore: AI, software engineering, frontend, backend, cloud and data.">
+<style>
+  :root {
+    --bg: #fbfaf8;
+    --surface: #ffffff;
+    --border: #e4e0d9;
+    --border-strong: #cfc9bf;
+    --ink: #1c1b19;
+    --ink-soft: #55514b;
+    --ink-faint: #8a847b;
+    --accent: #9a3412;
+    --accent-soft: #fdf1e7;
+    --chip-on: #1c1b19;
+    --chip-on-ink: #fbfaf8;
+    --shadow: 0 1px 2px rgba(28, 27, 25, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16151a;
+      --surface: #1e1d23;
+      --border: #302e37;
+      --border-strong: #423f4b;
+      --ink: #eceaf0;
+      --ink-soft: #a9a5b3;
+      --ink-faint: #7b7787;
+      --accent: #f0a882;
+      --accent-soft: #2b2128;
+      --chip-on: #eceaf0;
+      --chip-on-ink: #16151a;
+      --shadow: none;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 0 20px 72px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  header { padding: 56px 0 8px; }
+  h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 6vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -.02em;
+  }
+  .sub { margin: 0; color: var(--ink-soft); font-size: 15px; }
+  .sub b { color: var(--ink); font-weight: 600; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--bg);
+    padding: 20px 0 14px;
+    margin: 20px 0 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+  .row + .row { margin-top: 9px; }
+  .row-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .09em;
+    color: var(--ink-faint); font-weight: 600;
+    width: 100%;
+  }
+  @media (min-width: 560px) { .row-label { width: 52px; } }
+
+  .chip {
+    appearance: none;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font: inherit; font-size: 13.5px;
+    cursor: pointer;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  .chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+  .chip[aria-pressed="true"] {
+    background: var(--chip-on);
+    border-color: var(--chip-on);
+    color: var(--chip-on-ink);
+  }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .count { margin: 16px 0 0; font-size: 13.5px; color: var(--ink-faint); }
+
+  h2.month {
+    margin: 34px 0 12px;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .11em;
+    color: var(--ink-faint);
+  }
+
+  .event {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .event-top { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+  .date {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 5px;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+  .event h3 { margin: 0; font-size: 17px; line-height: 1.3; font-weight: 600; flex: 1 1 240px; }
+  .event h3 a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+  .event h3 a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .meta { margin: 8px 0 0; font-size: 13.5px; color: var(--ink-faint); }
+  .meta .fmt { color: var(--ink-soft); font-weight: 600; }
+  .desc { margin: 9px 0 0; font-size: 14.5px; color: var(--ink-soft); }
+  .tags { margin: 11px 0 0; display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    font-size: 11.5px; letter-spacing: .02em;
+    color: var(--ink-faint);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 6px;
+  }
+
+  .empty { padding: 28px 0; color: var(--ink-faint); font-size: 15px; }
+
+  .groups-section { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--border); }
+  .groups-section h2 { margin: 0 0 6px; font-size: 20px; letter-spacing: -.01em; }
+  .groups-section p { margin: 0 0 18px; color: var(--ink-soft); font-size: 14.5px; }
+  .grid { display: grid; gap: 8px; grid-template-columns: 1fr; }
+  @media (min-width: 620px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .group {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-decoration: none;
+  }
+  .group:hover { border-color: var(--ink-faint); }
+  .group b { display: block; color: var(--ink); font-size: 14.5px; font-weight: 600; }
+  .group span { display: block; margin-top: 2px; color: var(--ink-faint); font-size: 12.5px; }
+
+  footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--ink-faint); font-size: 13px; }
+  footer a { color: var(--ink-soft); }
+  footer p { margin: 0 0 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Singapore Tech Events</h1>
+  <p class="sub">
+    Meetups and conferences for AI, software engineering, frontend, backend, cloud and data —
+    in Singapore or joinable from SGT. Last updated
+    <b><span id="updated" data-updated="2026-08-05">5 August 2026</span></b>.
+    Covers the next eight weeks, plus larger conferences later in the year.
+  </p>
+</header>
+
+<div class="controls">
+  <div class="row" id="topics"><span class="row-label">Topic</span></div>
+  <div class="row" id="formats"><span class="row-label">Format</span></div>
+</div>
+
+<p class="count" id="count"></p>
+<main id="list"></main>
+
+<section class="groups-section">
+  <h2>Communities worth following</h2>
+  <p>Most Singapore meetups announce late. These groups are where the next batch shows up first.</p>
+  <div class="grid" id="groups"></div>
+</section>
+
+<footer>
+  <p>
+    Rebuilt every Monday morning by a scheduled GitHub Actions job, from
+    <a href="https://techmeetups.io/singapore">techmeetups.io</a>,
+    <a href="https://dev.events/meetups/AS/SG/Singapore">dev.events</a>,
+    <a href="https://singapore.aitinkerers.org/">AI Tinkerers</a>,
+    <a href="https://globalai.community/chapters/singapore">Global AI Singapore</a>,
+    <a href="https://www.sginnovate.com/events">SGInnovate</a>
+    and the community pages listed above.
+  </p>
+  <p>Every event here was checked against the organiser's own page. Anything unverifiable was left out.</p>
+</footer>
+
+</div>
+
+<script>
+const EVENTS = [
+  {
+    date: "2026-08-05",
+    display: "Aug 5",
+    name: "AI Tinkerers x Redis: Built for Speed",
+    venue: "Singapore (address on event page)",
+    time: "6:00–9:00 PM SGT",
+    format: "In person",
+    description: "Demo night on building fast AI agents with fresh data and memory, with live demos from local builders.",
+    tags: ["AI"],
+    url: "https://singapore.aitinkerers.org/p/ai-tinkerers-x-redis-built-for-speed"
+  },
+  {
+    date: "2026-08-06",
+    display: "Aug 6",
+    name: "Roast My TechStack #8",
+    venue: "SGInnovate, Singapore",
+    time: "",
+    format: "In person",
+    description: "Builders present their architecture and stack choices, then the room spends fifteen minutes pulling the decisions apart.",
+    tags: ["Software Engineering", "Backend/Cloud"],
+    url: "https://central.sginnovate.com/hub/events/8c3224b3-814b-44cb-bef1-f0f982f53d20"
+  },
+  {
+    date: "2026-08-22",
+    display: "Aug 22",
+    name: "AWS Community Day Singapore 2026",
+    venue: "IOI Central Boulevard Towers, Level 5 East Tower, 2 Central Boulevard",
+    time: "9:00 AM–5:30 PM SGT",
+    format: "In person",
+    description: "Community-led AWS conference on two tracks: AI engineering and intelligent applications, and cloud platform, security and operations.",
+    tags: ["Backend/Cloud", "AI", "Software Engineering"],
+    url: "https://www.awsugsg.dev/"
+  },
+  {
+    date: "2026-08-27",
+    display: "Aug 27",
+    name: "Global AI Construct Singapore",
+    venue: "Open Government Products Office, Lazada One, 51 Bras Basah Road",
+    time: "6:00–9:00 PM SGT",
+    format: "In person",
+    description: "Hands-on workshop building multi-agent AI applications on Microsoft AI Foundry, with an Azure subscription provided for the labs.",
+    tags: ["AI", "Backend/Cloud"],
+    url: "https://globalai.community/e/9r0cx6iy"
+  },
+  {
+    date: "2026-09-29",
+    display: "Sep 29–30",
+    name: "Tech Week Singapore 2026",
+    venue: "Sands Expo & Convention Centre",
+    time: "9:00 AM–5:00 PM SGT",
+    format: "In person",
+    description: "Five co-located conferences: Cloud and AI Infrastructure Asia, DevOps Live!, Big Data and AI World Asia, Data Centre World Asia, and Cyber Security World Asia.",
+    tags: ["Backend/Cloud", "Data", "AI"],
+    url: "https://www.singaporetechnologyweek.com/"
+  },
+  {
+    date: "2026-11-04",
+    display: "Nov 4–5",
+    name: "STACK Conference 2026",
+    venue: "Singapore (venue to be announced)",
+    time: "",
+    format: "In person",
+    description: "Singapore's largest government-led technology conference, covering agentic systems, intent-driven development, developer productivity and sustainable cloud infrastructure.",
+    tags: ["Software Engineering", "AI", "Backend/Cloud"],
+    url: "https://www.developer.tech.gov.sg/communities/events/conferences/stack-conference-2026/overview"
+  },
+  {
+    date: "2026-11-05",
+    display: "Nov 5",
+    name: "AgentCon Singapore",
+    venue: "Lifelong Learning Institute, 11 Eunos Road 8",
+    time: "8:30 AM–5:00 PM SGT",
+    format: "In person",
+    description: "One-day developer conference on AI agents: deep-dive talks, workshops on building and scaling agents, and open-source framework demos.",
+    tags: ["AI", "Software Engineering"],
+    url: "https://globalai.community/e/awgteae7"
+  }
+];
+
+const GROUPS = [
+  { name: "AI Tinkerers Singapore", note: "Demo nights for people shipping AI", url: "https://singapore.aitinkerers.org/" },
+  { name: "Global AI Singapore", note: "Azure, AI Foundry, agents; runs AgentCon", url: "https://globalai.community/chapters/singapore" },
+  { name: "AWS User Group Singapore", note: "Runs AWS Community Day", url: "https://www.meetup.com/aws-sg/" },
+  { name: "Cloud Native Singapore", note: "CNCF chapter: Kubernetes and platform", url: "https://community.cncf.io/singapore/" },
+  { name: "DevOps Singapore", note: "Delivery, platform and SRE practice", url: "https://www.meetup.com/devops-singapore/" },
+  { name: "SingaporeJS", note: "JavaScript, Node and the modern web", url: "https://www.meetup.com/singapore-js/" },
+  { name: "ReactJS Singapore", note: "React and React Native", url: "https://www.meetup.com/react-singapore/" },
+  { name: "Singapore Frontend", note: "Frontend engineering broadly", url: "https://www.meetup.com/singapore-frontend/" },
+  { name: "GoSG", note: "Go in production and side projects", url: "https://www.meetup.com/golangsg/" },
+  { name: "Rust Singapore", note: "Rust language and tooling", url: "https://www.meetup.com/rust-singapore/" },
+  { name: ".NET Developers SG", note: "C# and the .NET ecosystem", url: "https://www.meetup.com/net-developers-sg/" },
+  { name: "SingaDev", note: "Polyglot engineers, formerly SingaJUG", url: "https://www.meetup.com/singadev/" },
+  { name: "KSUG.AI APAC", note: "Kotlin and AI in the APAC region", url: "https://www.meetup.com/ksug-sg/" },
+  { name: "PyData Singapore", note: "Python for data and analytics", url: "https://www.meetup.com/pydata-sg/" },
+  { name: "Python User Group Singapore", note: "PUGS: general Python community", url: "https://pugs.org.sg/" },
+  { name: "Singapore Data & AI Engineering", note: "Pipelines, warehouses, ML platform", url: "https://www.meetup.com/singapore-data-engineering-meetup/" },
+  { name: "Data Engineering Singapore", note: "Pipelines and data infrastructure", url: "https://www.meetup.com/data-engineering-sg/" },
+  { name: "Machine Learning Singapore", note: "Applied ML and research talks", url: "https://www.meetup.com/machine-learning-singapore/" },
+  { name: "Singapore AI Developers Group", note: "GenAI, LLMs, agents, MLOps", url: "https://www.meetup.com/singapore-ai-developers-group/" },
+  { name: "Singapore AI ML & Computer Vision", note: "Vision models and applied ML", url: "https://www.meetup.com/singapore-computer-vision-meetup/" },
+  { name: "Women Devs SG", note: "Talks and workshops for women in tech", url: "https://www.meetup.com/women-devs-sg/" },
+  { name: "Junior Developers Singapore", note: "Early-career friendly sessions", url: "https://www.meetup.com/junior-developers-singapore/" },
+  { name: "FOSSASIA Singapore", note: "Open source and open technology", url: "https://www.meetup.com/fossasia-singapore-open-technology-meetup/" },
+  { name: "GDG Singapore", note: "Google technologies; runs DevFest", url: "https://gdg.community.dev/gdg-singapore/" },
+  { name: "SGInnovate", note: "Deep-tech talks and Roast My TechStack", url: "https://www.sginnovate.com/events" },
+  { name: "Singapore Gov Developer Portal", note: "STACK conference and meetups", url: "https://www.developer.tech.gov.sg/communities/events/" }
+];
+
+const TOPICS = ["AI", "Software Engineering", "Frontend", "Backend/Cloud", "Data"];
+const FORMATS = ["In person", "Online"];
+const MONTHS = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+
+let topic = "All";
+let format = "All";
+
+function chip(label, group, isActive) {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.type = "button";
+  b.textContent = label;
+  b.setAttribute("aria-pressed", String(isActive));
+  b.addEventListener("click", () => {
+    if (group === "topic") topic = label; else format = label;
+    render();
+  });
+  return b;
+}
+
+function buildChips() {
+  const t = document.getElementById("topics");
+  const f = document.getElementById("formats");
+  t.querySelectorAll(".chip").forEach(n => n.remove());
+  f.querySelectorAll(".chip").forEach(n => n.remove());
+  ["All", ...TOPICS].forEach(l => t.appendChild(chip(l, "topic", topic === l)));
+  ["All", ...FORMATS].forEach(l => f.appendChild(chip(l, "format", format === l)));
+}
+
+function monthKey(iso) {
+  const [y, m] = iso.split("-");
+  return MONTHS[Number(m) - 1] + " " + y;
+}
+
+function render() {
+  buildChips();
+  const list = document.getElementById("list");
+  const count = document.getElementById("count");
+  list.textContent = "";
+
+  const shown = EVENTS
+    .filter(e => topic === "All" || e.tags.includes(topic))
+    .filter(e => format === "All" || e.format === format)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  count.textContent = shown.length === EVENTS.length
+    ? shown.length + " events"
+    : shown.length + " of " + EVENTS.length + " events";
+
+  if (!shown.length) {
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "Nothing matches that combination. Try widening the filters.";
+    list.appendChild(p);
+    return;
+  }
+
+  let current = "";
+  for (const e of shown) {
+    const key = monthKey(e.date);
+    if (key !== current) {
+      current = key;
+      const h = document.createElement("h2");
+      h.className = "month";
+      h.textContent = key;
+      list.appendChild(h);
+    }
+
+    const card = document.createElement("article");
+    card.className = "event";
+
+    const top = document.createElement("div");
+    top.className = "event-top";
+    const d = document.createElement("span");
+    d.className = "date";
+    d.textContent = e.display;
+    const h3 = document.createElement("h3");
+    const a = document.createElement("a");
+    a.href = e.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = e.name;
+    h3.appendChild(a);
+    top.append(d, h3);
+
+    const meta = document.createElement("p");
+    meta.className = "meta";
+    const fmt = document.createElement("span");
+    fmt.className = "fmt";
+    fmt.textContent = e.format;
+    meta.appendChild(fmt);
+    const rest = [e.venue, e.time].filter(Boolean).join(" · ");
+    if (rest) meta.appendChild(document.createTextNode(" · " + rest));
+
+    const desc = document.createElement("p");
+    desc.className = "desc";
+    desc.textContent = e.description;
+
+    const tags = document.createElement("div");
+    tags.className = "tags";
+    for (const t of e.tags) {
+      const s = document.createElement("span");
+      s.className = "tag";
+      s.textContent = t;
+      tags.appendChild(s);
+    }
+
+    card.append(top, meta, desc, tags);
+    list.appendChild(card);
+  }
+}
+
+function renderGroups() {
+  const g = document.getElementById("groups");
+  for (const item of GROUPS) {
+    const a = document.createElement("a");
+    a.className = "group";
+    a.href = item.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    const b = document.createElement("b");
+    b.textContent = item.name;
+    const s = document.createElement("span");
+    s.textContent = item.note;
+    a.append(b, s);
+    g.appendChild(a);
+  }
+}
+
+render();
+renderGroups();
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+name: Weekly digest
+
+on:
+  schedule:
+    # Monday 00:00 UTC = Monday 08:00 SGT
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: digest
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the Copilot token is configured
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$COPILOT_GITHUB_TOKEN" ]; then
+            echo "::error::Secret COPILOT_GITHUB_TOKEN is not set. Create a PAT with the" \
+                 "'Copilot Requests' permission and add it with:" \
+                 "gh secret set COPILOT_GITHUB_TOKEN -R \$GITHUB_REPOSITORY"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Rebuild the digest
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          copilot -p "$(cat PROMPT.md)" \
+            --allow-all-tools \
+            --no-ask-user \
+            2>&1 | tee /tmp/copilot.log
+
+      - name: Validate before publishing
+        run: node tools/validate.mjs site/index.html
+
+      - name: Commit if the page changed
+        run: |
+          if git diff --quiet -- site/index.html; then
+            echo "No change to site/index.html this week." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/index.html
+          git commit -m "Refresh the events digest for $(date -u +%Y-%m-%d)"
+          git push
+
+      - name: Report what the agent did
+        if: always()
+        run: |
+          {
+            echo "### Copilot output (tail)"
+            echo '```'
+            tail -n 40 /tmp/copilot.log 2>/dev/null || echo "(no log)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      # Check out the commit the refresh job just pushed, not the stale ref.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v5
