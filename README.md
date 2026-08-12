@@ -5,7 +5,7 @@ software engineering, frontend, backend, cloud and data.
 
 **Read it here: https://dhrubajitpc.github.io/sg-tech-events/**
 
-Rebuilt every Monday morning (08:00 SGT) by a scheduled GitHub Actions job.
+Rebuilt every Monday morning (09:00 SGT) by a scheduled GitHub Actions job.
 Copilot CLI researches the listings and rewrites the page; a validator decides
 whether the result is publishable. If a run produces something broken, nothing is
 committed and the previous week's page stays live.
@@ -47,8 +47,21 @@ editing the page by hand on a different day needs an override:
 SG_TODAY=2026-08-05 node tools/validate.mjs site/index.html
 ```
 
-## Setup
+## Cloud setup
 
-The workflow needs one secret: `COPILOT_GITHUB_TOKEN`, a personal access token
-with the **Copilot Requests** permission. See `DESIGN.md` for why a PAT is
-required rather than the built-in `GITHUB_TOKEN`.
+The repository is designed to run entirely on GitHub-hosted Actions and publish
+to GitHub Pages. In **Settings > Pages**, set the source to **GitHub Actions**.
+The workflow deploys the site at:
+
+https://dhrubajitpc.github.io/sg-tech-events/
+
+The refresh job uses the requested `claude-opus-5` model through Copilot CLI.
+Create a fine-grained personal access token with the **Copilot Requests**
+permission and save it as the repository Actions secret
+`COPILOT_GITHUB_TOKEN` under **Settings > Secrets and variables > Actions**.
+The job fails visibly if the token or requested model is unavailable, and an
+invalid generated page is never committed or deployed.
+
+The workflow also supports manual runs from the **Actions** tab. Set
+`skip_refresh` to `true` to republish the current committed page without using a
+Copilot request.

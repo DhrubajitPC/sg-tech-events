@@ -2,8 +2,8 @@ name: Weekly digest
 
 on:
   schedule:
-    # Monday 00:00 UTC = Monday 08:00 SGT
-    - cron: "0 0 * * 1"
+    # Monday 01:00 UTC = Monday 09:00 SGT
+    - cron: "0 1 * * 1"
   workflow_dispatch:
     inputs:
       skip_refresh:
@@ -51,6 +51,7 @@ jobs:
         run: |
           set -o pipefail
           copilot -p "$(cat PROMPT.md)" \
+            --model=claude-opus-5 \
             --allow-all-tools \
             --no-ask-user \
             2>&1 | tee /tmp/copilot.log
