@@ -20,12 +20,12 @@ current version, so styling stays stable and every week is a reviewable diff.
 
 ## The weekly run
 
-`cron: "0 0 * * 1"` — Monday 00:00 UTC, which is Monday 08:00 SGT. GitHub delays
+`cron: "0 1 * * 1"` — Monday 01:00 UTC, which is Monday 09:00 SGT. GitHub delays
 scheduled runs under load, so treat the time as approximate. `workflow_dispatch`
 is enabled for manual runs.
 
 The `refresh` job installs Copilot CLI and runs it with `PROMPT.md` as the
-prompt. Copilot researches the sources listed there, rewrites `EVENTS`, updates
+prompt, explicitly requesting `claude-opus-5`. Copilot researches the sources listed there, rewrites `EVENTS`, updates
 the `data-updated` stamp, and runs the validator itself before finishing. The
 job then re-runs the validator independently, commits `site/index.html` if it
 changed, and the `deploy` job publishes `site/` to Pages.
@@ -70,14 +70,18 @@ node tools/validate.mjs site/index.html
 ## Authentication
 
 Copilot CLI authenticates with `COPILOT_GITHUB_TOKEN`, a repository secret
-holding a personal access token with the **Copilot Requests** permission. Usage
-bills to that account's Copilot seat.
+holding a fine-grained personal access token with the **Copilot Requests**
+permission. Usage bills to that account's Copilot seat. The workflow requests
+`claude-opus-5` explicitly; if that model is not enabled for the account, the
+run fails rather than silently using a different model.
 
 The simpler route — Copilot CLI authenticating with the built-in `GITHUB_TOKEN`
 and a `copilot-requests: write` permission — is only available in
 organization-owned repositories, and needs an org admin to enable the
 "Allow use of Copilot CLI billed to the organization" policy. This repository is
-personal, so it uses the PAT.
+personal, so it uses the PAT. To enable Pages, set the repository's Pages source
+to **GitHub Actions** under **Settings > Pages**. The published site is
+https://dhrubajitpc.github.io/sg-tech-events/.
 
 ## Publishing
 
