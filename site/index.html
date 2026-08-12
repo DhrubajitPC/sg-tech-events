@@ -166,7 +166,7 @@
   <p class="sub">
     Meetups and conferences for AI, software engineering, frontend, backend, cloud and data —
     in Singapore or joinable from SGT. Last updated
-    <b><span id="updated" data-updated="2026-08-05">5 August 2026</span></b>.
+    <b><span id="updated" data-updated="2026-08-12">12 August 2026</span></b>.
     Covers the next eight weeks, plus larger conferences later in the year.
   </p>
 </header>
@@ -203,77 +203,176 @@
 <script>
 const EVENTS = [
   {
-    date: "2026-08-05",
-    display: "Aug 5",
-    name: "AI Tinkerers x Redis: Built for Speed",
-    venue: "Singapore (address on event page)",
-    time: "6:00–9:00 PM SGT",
+    date: "2026-08-13",
+    display: "Aug 13",
+    name: "STACK Meetup [Engineering]: Developer Productivity for the AI Native",
+    venue: "GovTech Punggol Digital District, 82 Punggol Way",
+    time: "7:00\u20138:30 PM SGT",
     format: "In person",
-    description: "Demo night on building fast AI agents with fresh data and memory, with live demos from local builders.",
-    tags: ["AI"],
-    url: "https://singapore.aitinkerers.org/p/ai-tinkerers-x-redis-built-for-speed"
+    description: "GovTech's Developer Productivity and Services team on Airlift, its ephemeral sandbox environments for developers and agents, and Iter, a minimal agentic primitive.",
+    tags: ["Software Engineering", "AI", "Backend/Cloud"],
+    url: "https://www.meetup.com/stack-community/events/315885028/"
   },
   {
-    date: "2026-08-06",
-    display: "Aug 6",
-    name: "Roast My TechStack #8",
-    venue: "SGInnovate, Singapore",
-    time: "",
+    date: "2026-08-14",
+    display: "Aug 14",
+    name: "JuniorDevSG \u2014 Code & Tell August 2026",
+    venue: "The Great Room, Paya Lebar Quarter",
+    time: "7:00\u20139:30 PM SGT",
     format: "In person",
-    description: "Builders present their architecture and stack choices, then the room spends fifteen minutes pulling the decisions apart.",
-    tags: ["Software Engineering", "Backend/Cloud"],
-    url: "https://central.sginnovate.com/hub/events/8c3224b3-814b-44cb-bef1-f0f982f53d20"
+    description: "Two speakers walk through personal AI agents built with OpenClaw and NanoClaw, covering architecture choices, setup and day-to-day workflow use.",
+    tags: ["AI", "Software Engineering"],
+    url: "https://www.meetup.com/junior-developers-singapore/events/315942028/"
+  },
+  {
+    date: "2026-08-18",
+    display: "Aug 18",
+    name: "Mindstone Singapore August AI Meetup",
+    venue: "EHL Campus, 3 Lady Hill Road",
+    time: "7:00\u20139:00 PM SGT",
+    format: "In person",
+    description: "Three talks: lessons from building a product on LLMs, a practical AI productivity demo, and a discussion of where AI is heading.",
+    tags: ["AI"],
+    url: "https://community.mindstone.com/events/mindstone-singapore-august-ai-meetup-2026"
+  },
+  {
+    date: "2026-08-21",
+    display: "Aug 21",
+    name: "CyberSG Connect: Trustworthy and Secure AI Agents",
+    venue: "32 Carpenter Street",
+    time: "3:00\u20135:10 PM SGT",
+    format: "In person",
+    description: "Panel on securing AI agents from architecture and design through deployment, with speakers from AI Singapore, NUS School of Computing and FAR.AI.",
+    tags: ["AI", "Backend/Cloud"],
+    url: "https://www.sginnovate.com/event/cybersg-connect-trustworthy-and-secure-ai-agents"
   },
   {
     date: "2026-08-22",
     display: "Aug 22",
     name: "AWS Community Day Singapore 2026",
     venue: "IOI Central Boulevard Towers, Level 5 East Tower, 2 Central Boulevard",
-    time: "9:00 AM–5:30 PM SGT",
+    time: "9:00 AM\u20135:30 PM SGT",
     format: "In person",
-    description: "Community-led AWS conference on two tracks: AI engineering and intelligent applications, and cloud platform, security and operations.",
+    description: "Community-led AWS conference with hands-on technical sessions and production lessons from local practitioners; paid ticket, registration closes 16 August.",
     tags: ["Backend/Cloud", "AI", "Software Engineering"],
     url: "https://www.awsugsg.dev/"
+  },
+  {
+    date: "2026-08-25",
+    display: "Aug 25",
+    name: "Data Engineering SG x IMDA: Data Engineering in the Age of Agentic Engineering",
+    venue: "Infocomm Media Development Authority",
+    time: "6:30\u20138:30 PM SGT",
+    format: "In person",
+    description: "Adrian from Snowflake on how data teams are building pipelines and data applications at scale with agentic coding tools.",
+    tags: ["Data", "AI"],
+    url: "https://www.meetup.com/data-engineering-sg/events/315948570/"
+  },
+  {
+    date: "2026-08-26",
+    display: "Aug 26",
+    name: "KSUG.AI Singapore #48",
+    venue: "Nutanix, 38 Beach Road, South Beach Tower",
+    time: "6:00\u20139:00 PM SGT",
+    format: "In person",
+    description: "Kubernetes and AI community meetup hosted at Nutanix; also streamed on Zoom for those who cannot attend in person.",
+    tags: ["Backend/Cloud", "AI"],
+    url: "https://www.meetup.com/ksug-sg/events/315593948/"
+  },
+  {
+    date: "2026-08-27",
+    display: "Aug 27",
+    name: "From Vibes to Engineering: Move Fast Without Breaking Everything",
+    venue: "Lorong AI @ one-north",
+    time: "10:00 AM\u201312:00 PM SGT",
+    format: "In person",
+    description: "Workshop on spec-driven development and production readiness, run as breakout circles with fractional CTOs pressure-testing your codebase and process.",
+    tags: ["Software Engineering"],
+    url: "https://www.sginnovate.com/event/vibes-engineering-move-fast-without-breaking-everything"
   },
   {
     date: "2026-08-27",
     display: "Aug 27",
     name: "Global AI Construct Singapore",
-    venue: "Open Government Products Office, Lazada One, 51 Bras Basah Road",
-    time: "6:00–9:00 PM SGT",
+    venue: "Singapore, in collaboration with HTX",
+    time: "6:00\u20139:00 PM SGT",
     format: "In person",
-    description: "Hands-on workshop building multi-agent AI applications on Microsoft AI Foundry, with an Azure subscription provided for the labs.",
+    description: "Build session rather than a talk night: pick a challenge, build an AI agent that reasons and calls tools, then demo it at the end.",
     tags: ["AI", "Backend/Cloud"],
     url: "https://globalai.community/e/9r0cx6iy"
   },
   {
+    date: "2026-08-29",
+    display: "Aug 29",
+    name: "Daytona HackSprint Singapore",
+    venue: "32 Carpenter Street",
+    time: "10:00 AM\u20136:00 PM SGT",
+    format: "In person",
+    description: "One-day AI hackathon: a workshop on Daytona agent sandboxes, then team building and live demos of working projects.",
+    tags: ["AI", "Backend/Cloud"],
+    url: "https://www.sginnovate.com/event/daytona-hacksprint-singapore-august-2026"
+  },
+  {
+    date: "2026-09-03",
+    display: "Sep 3",
+    name: "Roast My TechStack #9",
+    venue: "32 Carpenter Street",
+    time: "6:30\u20139:00 PM SGT",
+    format: "In person",
+    description: "Three builders present their architecture, constraints and stack choices; the room then spends fifteen minutes each pulling the trade-offs apart.",
+    tags: ["Software Engineering", "Backend/Cloud"],
+    url: "https://www.sginnovate.com/event/roast-my-techstack-9"
+  },
+  {
+    date: "2026-09-25",
+    display: "Sep 25",
+    name: "SGNOG13 Conference",
+    venue: "One Farrer Hotel, 1 Farrer Park Station Road",
+    time: "",
+    format: "In person",
+    description: "Singapore Network Operators Group's annual conference on internet infrastructure, routing and network operations practice; paid ticket.",
+    tags: ["Backend/Cloud"],
+    url: "https://www.sgnog.net/?page_id=11382"
+  },
+  {
     date: "2026-09-29",
-    display: "Sep 29–30",
+    display: "Sep 29\u201330",
     name: "Tech Week Singapore 2026",
     venue: "Sands Expo & Convention Centre",
-    time: "9:00 AM–5:00 PM SGT",
+    time: "",
     format: "In person",
-    description: "Five co-located conferences: Cloud and AI Infrastructure Asia, DevOps Live!, Big Data and AI World Asia, Data Centre World Asia, and Cyber Security World Asia.",
+    description: "Five co-located conferences on one ticket: Cloud and AI Infrastructure Asia, DevOps Live!, Big Data and AI World Asia, Data Centre World Asia, and Cyber Security World Asia.",
     tags: ["Backend/Cloud", "Data", "AI"],
     url: "https://www.singaporetechnologyweek.com/"
   },
   {
-    date: "2026-11-04",
-    display: "Nov 4–5",
-    name: "STACK Conference 2026",
-    venue: "Singapore (venue to be announced)",
+    date: "2026-10-27",
+    display: "Oct 27\u201328",
+    name: "ContainerDays & AI Context Singapore 2026",
+    venue: "Suntec Singapore Convention & Exhibition Centre",
     time: "",
     format: "In person",
-    description: "Singapore's largest government-led technology conference, covering agentic systems, intent-driven development, developer productivity and sustainable cloud infrastructure.",
+    description: "Two days on production Kubernetes, platform engineering, AI infrastructure and agentic tooling, with keynotes from Kelsey Hightower and Saiyam Pathak.",
+    tags: ["Backend/Cloud", "AI", "Software Engineering"],
+    url: "https://www.containerdays.io/containerdays-singapore-2026/"
+  },
+  {
+    date: "2026-11-04",
+    display: "Nov 4\u20135",
+    name: "STACK Conference 2026",
+    venue: "Singapore (venue on event page)",
+    time: "",
+    format: "In person",
+    description: "GovTech's biennial technology conference, covering agentic AI, engineering velocity, cloud and design, with pre-conference workshops on 3 November.",
     tags: ["Software Engineering", "AI", "Backend/Cloud"],
-    url: "https://www.developer.tech.gov.sg/communities/events/conferences/stack-conference-2026/overview"
+    url: "https://www.sginnovate.com/event/stack-conference-2026"
   },
   {
     date: "2026-11-05",
     display: "Nov 5",
     name: "AgentCon Singapore",
-    venue: "Lifelong Learning Institute, 11 Eunos Road 8",
-    time: "8:30 AM–5:00 PM SGT",
+    venue: "Singapore (venue on event page)",
+    time: "8:30 AM\u20135:00 PM SGT",
     format: "In person",
     description: "One-day developer conference on AI agents: deep-dive talks, workshops on building and scaling agents, and open-source framework demos.",
     tags: ["AI", "Software Engineering"],
