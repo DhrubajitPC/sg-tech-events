@@ -18,6 +18,10 @@ tools/validate.mjs             pre-publish gate
 The file is both the published artifact and the template: each run reads the
 current version, so styling stays stable and every week is a reviewable diff.
 
+`site/` also accumulates a `<date>/index.html` snapshot per week (see
+Publishing below) — root always shows the latest digest, each dated folder is
+that week's page frozen in place.
+
 ## The weekly run
 
 `cron: "0 1 * * 1"` — Monday 01:00 UTC, which is Monday 09:00 SGT. GitHub delays
@@ -29,6 +33,14 @@ prompt, explicitly requesting `claude-opus-5`. Copilot researches the sources li
 the `data-updated` stamp, and runs the validator itself before finishing. The
 job then re-runs the validator independently, commits `site/index.html` if it
 changed, and the `deploy` job publishes `site/` to Pages.
+
+Before committing, the refresh job also copies `site/index.html` into
+`site/<data-updated date>/index.html` — a frozen snapshot at that week's own
+URL, e.g. `https://dhrubajitpc.github.io/sg-tech-events/2026-08-17/`. The date
+comes from the page's own `data-updated` stamp, not the runner's UTC clock, so
+it always matches what the page says. `site/index.html` at the root keeps being
+overwritten every week, so the root URL always serves the latest digest while
+every past week stays reachable at its own dated URL.
 
 `deploy` runs when `refresh` succeeded *or* was skipped, and never when it
 failed. The skipped case is the `skip_refresh` dispatch input, which republishes
@@ -96,10 +108,11 @@ the refresh job just pushed.
 The `notify-teams` job posts an Adaptive Card to a Teams channel via a
 Power Automate "When a Teams webhook request is received" workflow, after
 `deploy` succeeds. `tools/teams-summary.mjs` reads the just-published
-`site/index.html`, and the card body lists the soonest events (name, date,
-tags, up to 8) with a count of how many more are on the full page — the
-same `EVENTS` parsing `tools/validate.mjs` uses, shared via `tools/events.mjs`.
-It requires two repository secrets that aren't set up by default:
+`site/index.html`; the card title includes the page's `data-updated` date,
+and the body lists the soonest events (name, date, tags, up to 8) with a
+count of how many more are on the full page — the same `EVENTS` parsing
+`tools/validate.mjs` uses, shared via `tools/events.mjs`. It requires two
+repository secrets that aren't set up by default:
 
 ```bash
 gh secret set TEAMS_WEBHOOK_URL -R DhrubajitPC/sg-tech-events

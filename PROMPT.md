@@ -36,19 +36,26 @@ content is substantial. Also exclude paid vendor training courses.
    - https://www.sginnovate.com/events — SGInnovate deep-tech talks
    - https://www.developer.tech.gov.sg/communities/events/ — STACK conference and meetups
    - https://community.cncf.io/singapore/ — Cloud Native Singapore
+   - Eventbrite category pages for Singapore:
+     https://www.eventbrite.com/d/singapore--singapore/tech/,
+     https://www.eventbrite.com/d/singapore--singapore/software-engineering/,
+     https://www.eventbrite.sg/d/singapore--singapore/artificial-intelligence/
    - Meetup.com group event pages for the active Singapore communities, especially:
      SingaporeJS (singapore-js), ReactJS Singapore (react-singapore),
-     Singapore Frontend (singapore-frontend), GoSG (golangsg),
-     Rust Singapore (rust-singapore), .NET Developers SG (net-developers-sg),
-     DevOps Singapore (devops-singapore), AWS User Group Singapore (aws-sg),
-     KSUG.AI APAC (ksug-sg), SingaDev (singadev),
-     Junior Developers Singapore (junior-developers-singapore),
+     Singapore Frontend (singapore-frontend), Vue JS Singapore (Vue-JS-Singapore),
+     GoSG (golangsg), Rust Singapore (rust-singapore),
+     .NET Developers SG (net-developers-sg), GraphQL Singapore (graphql-sg),
+     DevOps Singapore (devops-singapore), Platform Engineers Singapore (platform-engineers-singapore),
+     AWS User Group Singapore (aws-sg), KSUG.AI APAC (ksug-sg),
+     SingaDev (singadev), Junior Developers Singapore (junior-developers-singapore),
      Singapore Data & AI Engineering (singapore-data-engineering-meetup),
      Data Engineering Singapore (data-engineering-sg), PyData SG (pydata-sg),
      Machine Learning Singapore (machine-learning-singapore),
      Singapore AI Developers Group (singapore-ai-developers-group),
      Singapore AI ML & Computer Vision (singapore-computer-vision-meetup),
-     Women Devs SG (women-devs-sg)
+     Women Devs SG (women-devs-sg),
+     STACK Community Powered by GovTech Singapore (stack-by-govtech-singapore),
+     Tech Talks by Thoughtworks (ThoughtWorks-Talks-Tech)
    - Also run one or two fresh web searches such as
      "Singapore tech meetup <current month> <year>", "Singapore AI meetup <month>",
      "Singapore developer conference <year>" to catch anything the aggregators miss.

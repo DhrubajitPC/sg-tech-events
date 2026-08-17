@@ -11,6 +11,7 @@ const PAGE_URL = "https://dhrubajitpc.github.io/sg-tech-events/";
 const MAX_LISTED = 8;
 
 const src = readFileSync(file, "utf8");
+const updated = src.match(/data-updated="([^"]+)"/)?.[1] ?? "unknown date";
 const events = evalArray(src, "EVENTS").sort((a, b) => a.date.localeCompare(b.date));
 
 const listed = events.slice(0, MAX_LISTED);
@@ -26,7 +27,7 @@ const card = {
   $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
   version: "1.4",
   body: [
-    { type: "TextBlock", text: `SG Tech Events digest — ${events.length} events`, weight: "Bolder", size: "Medium" },
+    { type: "TextBlock", text: `SG Tech Events digest — ${updated} — ${events.length} events`, weight: "Bolder", size: "Medium" },
     { type: "TextBlock", text: lines.join("\n\n"), wrap: true },
     { type: "TextBlock", text: `[Full digest](${PAGE_URL})`, wrap: true },
   ],
