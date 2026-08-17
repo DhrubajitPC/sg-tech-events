@@ -105,3 +105,31 @@ jobs:
           path: site
       - id: deploy
         uses: actions/deploy-pages@v5
+
+  notify-teams:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post weekly summary to Teams
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          TEAMS_WEBHOOK_SECRET: ${{ secrets.TEAMS_WEBHOOK_SECRET }}
+        run: |
+          curl -sf -H "Content-Type: application/json" -d '{
+            "secret": "'"$TEAMS_WEBHOOK_SECRET"'",
+            "type": "message",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "type": "AdaptiveCard",
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "version": "1.4",
+                  "body": [
+                    { "type": "TextBlock", "text": "SG Tech Events digest published", "weight": "Bolder", "size": "Medium" },
+                    { "type": "TextBlock", "text": "https://dhrubajitpc.github.io/sg-tech-events/", "wrap": true }
+                  ]
+                }
+              }
+            ]
+          }' "$TEAMS_WEBHOOK_URL"

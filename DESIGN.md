@@ -91,6 +91,26 @@ that token do not reliably trigger the separate Pages build, so the deploy is
 explicit instead. The `deploy` job checks out `main` again to pick up the commit
 the refresh job just pushed.
 
+## Notifications
+
+The `notify-teams` job posts an Adaptive Card to a Teams channel via a
+Power Automate "When a Teams webhook request is received" workflow, after
+`deploy` succeeds. It requires two repository secrets that aren't set up by
+default:
+
+```bash
+gh secret set TEAMS_WEBHOOK_URL -R DhrubajitPC/sg-tech-events
+gh secret set TEAMS_WEBHOOK_SECRET -R DhrubajitPC/sg-tech-events
+```
+
+`TEAMS_WEBHOOK_URL` is the HTTP POST URL from the Teams-side workflow trigger.
+`TEAMS_WEBHOOK_SECRET` is an arbitrary fixed string that must match the value
+checked by that workflow's Condition step — Teams webhook triggers have no
+schema field for it, so the check has to use the Expression
+`triggerBody()?['secret']` rather than Dynamic Content. Without both secrets
+set, `notify-teams` fails (the curl call errors on the missing URL) without
+affecting `refresh` or `deploy` — the page still publishes either way.
+
 ## Changing what gets listed
 
 Edit `PROMPT.md` — the sources, the topic scope, the exclusions and the tag
@@ -111,4 +131,6 @@ it goes live, replace the commit step with a pull request.
   on AWS Community Day and dev.events serving global listings on a
   Singapore-filtered URL, which is why the prompt insists on the organiser's page.
 - A generation that fails validation leaves the page untouched and fails the run.
-  GitHub emails the repository owner on workflow failure; there is no other alert.
+  GitHub emails the repository owner on workflow failure. A successful publish
+  also posts a Teams notification (see Notifications above), but that alert
+  depends on the `TEAMS_WEBHOOK_URL`/`TEAMS_WEBHOOK_SECRET` secrets being set.
