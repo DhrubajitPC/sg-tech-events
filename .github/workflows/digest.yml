@@ -105,3 +105,23 @@ jobs:
           path: site
       - id: deploy
         uses: actions/deploy-pages@v5
+
+  notify-teams:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the commit deploy just published, not the stale ref.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Post weekly summary to Teams
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          TEAMS_WEBHOOK_SECRET: ${{ secrets.TEAMS_WEBHOOK_SECRET }}
+        run: |
+          set -o pipefail
+          node tools/teams-summary.mjs site/index.html \
+            | curl -sf -H "Content-Type: application/json" -d @- "$TEAMS_WEBHOOK_URL"
