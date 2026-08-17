@@ -35,7 +35,8 @@ content is substantial. Also exclude paid vendor training courses.
    - https://dev.events/meetups/AS/SG/Singapore and https://dev.events/conferences/AS/SG/Singapore
    - https://www.sginnovate.com/events — SGInnovate deep-tech talks
    - https://www.developer.tech.gov.sg/communities/events/ — STACK conference and meetups
-   - https://community.cncf.io/singapore/ — Cloud Native Singapore
+   - https://ocgroups.dev/cncf/group/v58wadq — Cloud Native Singapore (CNCF moved its
+     community platform off community.cncf.io; that old URL now redirects here)
    - Eventbrite category pages for Singapore:
      https://www.eventbrite.com/d/singapore--singapore/tech/,
      https://www.eventbrite.com/d/singapore--singapore/software-engineering/,
@@ -87,7 +88,8 @@ content is substantial. Also exclude paid vendor training courses.
    - Update both the visible date text and the `data-updated` attribute on
      `<span id="updated">` to today's date. The attribute must be `YYYY-MM-DD`.
    - Change nothing else: keep the CSS, the filter chips, the month grouping,
-     the light/dark theming, and the communities grid exactly as they are.
+     the light/dark theming, the communities grid, the Sources section and the
+     footer exactly as they are.
 
 7. Run `node tools/validate.mjs site/index.html`. It checks the schema, rejects
    past dates, non-https or placeholder URLs, tags outside the allowed set, and a
