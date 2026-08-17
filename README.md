@@ -3,7 +3,9 @@
 A weekly digest of technology meetups and conferences in Singapore — AI,
 software engineering, frontend, backend, cloud and data.
 
-**Read it here: https://dhrubajitpc.github.io/sg-tech-events/**
+**Read it here: https://dhrubajitpc.github.io/sg-tech-events/** — that URL
+always shows the latest digest. Each past week stays reachable at its own
+dated URL, e.g. `https://dhrubajitpc.github.io/sg-tech-events/2026-08-17/`.
 
 Rebuilt every Monday morning (09:00 SGT) by a scheduled GitHub Actions job.
 Copilot CLI researches the listings and rewrites the page; a validator decides
