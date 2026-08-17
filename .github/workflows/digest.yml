@@ -110,26 +110,18 @@ jobs:
     needs: [deploy]
     runs-on: ubuntu-latest
     steps:
+      # Check out the commit deploy just published, not the stale ref.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
       - name: Post weekly summary to Teams
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           TEAMS_WEBHOOK_SECRET: ${{ secrets.TEAMS_WEBHOOK_SECRET }}
         run: |
-          curl -sf -H "Content-Type: application/json" -d '{
-            "secret": "'"$TEAMS_WEBHOOK_SECRET"'",
-            "type": "message",
-            "attachments": [
-              {
-                "contentType": "application/vnd.microsoft.card.adaptive",
-                "content": {
-                  "type": "AdaptiveCard",
-                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                  "version": "1.4",
-                  "body": [
-                    { "type": "TextBlock", "text": "SG Tech Events digest published", "weight": "Bolder", "size": "Medium" },
-                    { "type": "TextBlock", "text": "https://dhrubajitpc.github.io/sg-tech-events/", "wrap": true }
-                  ]
-                }
-              }
-            ]
-          }' "$TEAMS_WEBHOOK_URL"
+          set -o pipefail
+          node tools/teams-summary.mjs site/index.html \
+            | curl -sf -H "Content-Type: application/json" -d @- "$TEAMS_WEBHOOK_URL"

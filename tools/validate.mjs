@@ -6,7 +6,7 @@
 // A stale digest beats a broken or empty one.
 
 import { readFileSync } from "node:fs";
-import { runInNewContext } from "node:vm";
+import { evalArray } from "./events.mjs";
 
 const TOPICS = new Set(["AI", "Software Engineering", "Frontend", "Backend/Cloud", "Data"]);
 const FORMATS = new Set(["In person", "Online"]);
@@ -33,41 +33,9 @@ if (!/<\/html>\s*$/.test(src)) fail("file does not end with </html> — likely t
 if (!/<title>[^<]+<\/title>/.test(src)) fail("missing a non-empty <title>");
 if (src.length < 2000) fail(`file is only ${src.length} bytes — implausibly small`);
 
-// --- pull an array literal out of the inline script --------------------------
-// Walks brackets while respecting string literals, so a "]" inside a
-// description or URL does not end the array early.
-function extractArray(source, name) {
-  const decl = source.indexOf(`const ${name} = [`);
-  if (decl === -1) throw new Error(`no "const ${name} = [" found`);
-  const open = source.indexOf("[", decl);
-  let depth = 0, quote = null;
-  for (let i = open; i < source.length; i++) {
-    const c = source[i];
-    if (quote) {
-      if (c === "\\") { i++; continue; }
-      if (c === quote) quote = null;
-      continue;
-    }
-    if (c === '"' || c === "'" || c === "`") { quote = c; continue; }
-    if (c === "[") depth++;
-    else if (c === "]") {
-      depth--;
-      if (depth === 0) return source.slice(open, i + 1);
-    }
-  }
-  throw new Error(`unterminated ${name} array`);
-}
-
-function evalArray(name) {
-  const literal = extractArray(src, name);
-  const value = runInNewContext(`(${literal})`, Object.create(null), { timeout: 2000 });
-  if (!Array.isArray(value)) throw new Error(`${name} is not an array`);
-  return value;
-}
-
 let EVENTS = [], GROUPS = [];
-try { EVENTS = evalArray("EVENTS"); } catch (e) { fail(`EVENTS: ${e.message}`); }
-try { GROUPS = evalArray("GROUPS"); } catch (e) { fail(`GROUPS: ${e.message}`); }
+try { EVENTS = evalArray(src, "EVENTS"); } catch (e) { fail(`EVENTS: ${e.message}`); }
+try { GROUPS = evalArray(src, "GROUPS"); } catch (e) { fail(`GROUPS: ${e.message}`); }
 
 // --- last-updated stamp ------------------------------------------------------
 const stamp = src.match(/data-updated="([^"]+)"/);

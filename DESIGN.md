@@ -95,8 +95,11 @@ the refresh job just pushed.
 
 The `notify-teams` job posts an Adaptive Card to a Teams channel via a
 Power Automate "When a Teams webhook request is received" workflow, after
-`deploy` succeeds. It requires two repository secrets that aren't set up by
-default:
+`deploy` succeeds. `tools/teams-summary.mjs` reads the just-published
+`site/index.html`, and the card body lists the soonest events (name, date,
+tags, up to 8) with a count of how many more are on the full page — the
+same `EVENTS` parsing `tools/validate.mjs` uses, shared via `tools/events.mjs`.
+It requires two repository secrets that aren't set up by default:
 
 ```bash
 gh secret set TEAMS_WEBHOOK_URL -R DhrubajitPC/sg-tech-events
