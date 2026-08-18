@@ -21,7 +21,7 @@
     --shadow: 0 1px 2px rgba(28, 27, 25, .05);
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #16151a;
       --surface: #1e1d23;
       --border: #302e37;
@@ -36,8 +36,28 @@
       --shadow: none;
     }
   }
+  /* Explicit override (from the toggle) wins regardless of system scheme. */
+  :root[data-theme="dark"] {
+    --bg: #16151a;
+    --surface: #1e1d23;
+    --border: #302e37;
+    --border-strong: #423f4b;
+    --ink: #eceaf0;
+    --ink-soft: #a9a5b3;
+    --ink-faint: #7b7787;
+    --accent: #f0a882;
+    --accent-soft: #2b2128;
+    --chip-on: #eceaf0;
+    --chip-on-ink: #16151a;
+    --shadow: none;
+  }
 
   * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: no-preference) {
+    *, *::before, *::after {
+      transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+    }
+  }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
@@ -49,6 +69,7 @@
   .wrap { max-width: 760px; margin: 0 auto; }
 
   header { padding: 56px 0 8px; }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   h1 {
     margin: 0 0 10px;
     font-size: clamp(28px, 6vw, 38px);
@@ -57,6 +78,35 @@
   }
   .sub { margin: 0; color: var(--ink-soft); font-size: 15px; }
   .sub b { color: var(--ink); font-weight: 600; }
+
+  .theme-toggle {
+    position: relative;
+    flex: none;
+    width: 36px; height: 36px;
+    margin-top: 4px;
+    appearance: none;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--ink-faint); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .theme-toggle svg {
+    position: absolute; inset: 0; margin: auto;
+    width: 18px; height: 18px;
+    color: var(--ink-soft);
+  }
+  .theme-toggle .icon-moon { opacity: 0; }
+  .theme-toggle[data-active="dark"] .icon-sun { opacity: 0; }
+  .theme-toggle[data-active="dark"] .icon-moon { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-toggle svg { transition: opacity .3s ease, transform .4s ease; }
+    .theme-toggle .icon-sun { transform: rotate(0deg) scale(1); }
+    .theme-toggle .icon-moon { transform: rotate(-90deg) scale(.6); }
+    .theme-toggle[data-active="dark"] .icon-sun { transform: rotate(90deg) scale(.6); }
+    .theme-toggle[data-active="dark"] .icon-moon { transform: rotate(0deg) scale(1); }
+  }
 
   .controls {
     position: sticky; top: 0; z-index: 5;
@@ -157,12 +207,32 @@
   footer a { color: var(--ink-soft); }
   footer p { margin: 0 0 8px; }
 </style>
+<script>
+  // Apply any saved theme choice before first paint, so there's no flash of
+  // the wrong theme. The toggle button's own JS lives with the rest of the
+  // page script, near the end of <body>.
+  (function () {
+    var saved = localStorage.getItem("theme");
+    if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+  })();
+</script>
 </head>
 <body>
 <div class="wrap">
 
 <header>
-  <h1>Singapore Tech Events</h1>
+  <div class="header-top">
+    <h1>Singapore Tech Events</h1>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+      </svg>
+    </button>
+  </div>
   <p class="sub">
     Meetups and conferences for AI, software engineering, frontend, backend, cloud and data —
     in Singapore or joinable from SGT. Last updated
@@ -727,8 +797,37 @@ function renderGroups() {
   }
 }
 
+function systemTheme() {
+  return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function syncThemeToggle(theme) {
+  const btn = document.getElementById("themeToggle");
+  btn.dataset.active = theme;
+  btn.setAttribute("aria-pressed", String(theme === "dark"));
+  btn.setAttribute("aria-label", theme === "dark" ? "Switch to light theme" : "Switch to dark theme");
+}
+
+function initTheme() {
+  const btn = document.getElementById("themeToggle");
+  syncThemeToggle(document.documentElement.dataset.theme || systemTheme());
+
+  btn.addEventListener("click", () => {
+    const next = btn.dataset.active === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("theme", next);
+    syncThemeToggle(next);
+  });
+
+  // Live-follow the system theme for as long as the visitor hasn't picked one.
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (!localStorage.getItem("theme")) syncThemeToggle(systemTheme());
+  });
+}
+
 render();
 renderGroups();
+initTheme();
 </script>
 </body>
 </html>

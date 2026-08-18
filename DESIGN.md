@@ -111,7 +111,9 @@ Power Automate "When a Teams webhook request is received" workflow, after
 `site/index.html`; the card title includes the page's `data-updated` date,
 and the body lists the soonest events (name, date, tags, up to 8) with a
 count of how many more are on the full page — the same `EVENTS` parsing
-`tools/validate.mjs` uses, shared via `tools/events.mjs`. It requires two
+`tools/validate.mjs` uses, shared via `tools/events.mjs`. The "Full digest"
+link points at that week's own dated archive URL (see Publishing above), not
+root, so old notifications keep linking to the right content. It requires two
 repository secrets that aren't set up by default:
 
 ```bash
