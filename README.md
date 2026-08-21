@@ -1,11 +1,11 @@
-# Singapore Tech Events
+# TechPulse RSVP
 
 A weekly digest of technology meetups and conferences in Singapore — AI,
 software engineering, frontend, backend, cloud and data.
 
-**Read it here: https://dhrubajitpc.github.io/sg-tech-events/** — that URL
+**Read it here: https://dhrubajitpc.github.io/techpulse-rsvp/** — that URL
 always shows the latest digest. Each past week stays reachable at its own
-dated URL, e.g. `https://dhrubajitpc.github.io/sg-tech-events/2026-08-17/`.
+dated URL, e.g. `https://dhrubajitpc.github.io/techpulse-rsvp/2026-08-17/`.
 
 Rebuilt every Monday morning (09:00 SGT) by a scheduled GitHub Actions job.
 Copilot CLI researches the listings and rewrites the page; a validator decides
@@ -27,13 +27,13 @@ committed and the previous week's page stays live.
 A full run — research, validate, commit, deploy:
 
 ```bash
-gh workflow run digest.yml -R DhrubajitPC/sg-tech-events
+gh workflow run digest.yml -R DhrubajitPC/techpulse-rsvp
 ```
 
 Republish the committed page without spending a Copilot run:
 
 ```bash
-gh workflow run digest.yml -R DhrubajitPC/sg-tech-events -f skip_refresh=true
+gh workflow run digest.yml -R DhrubajitPC/techpulse-rsvp -f skip_refresh=true
 ```
 
 ## Validating a local edit
@@ -55,7 +55,7 @@ The repository is designed to run entirely on GitHub-hosted Actions and publish
 to GitHub Pages. In **Settings > Pages**, set the source to **GitHub Actions**.
 The workflow deploys the site at:
 
-https://dhrubajitpc.github.io/sg-tech-events/
+https://dhrubajitpc.github.io/techpulse-rsvp/
 
 The refresh job uses the requested `claude-opus-5` model through Copilot CLI.
 Create a fine-grained personal access token with the **Copilot Requests**

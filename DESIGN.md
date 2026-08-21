@@ -8,6 +8,7 @@ writes the HTML; a validator decides whether the result is fit to publish.
 
 ```
 site/index.html                the digest — self-contained, inline CSS and JS
+site/icon.png                  TechPulse RSVP mark, used in the Teams card
 PROMPT.md                      the instructions Copilot follows each run
 tools/validate.mjs             pre-publish gate
 .github/workflows/digest.yml   cron, generation, validation, commit, deploy
@@ -36,7 +37,7 @@ changed, and the `deploy` job publishes `site/` to Pages.
 
 Before committing, the refresh job also copies `site/index.html` into
 `site/<data-updated date>/index.html` — a frozen snapshot at that week's own
-URL, e.g. `https://dhrubajitpc.github.io/sg-tech-events/2026-08-17/`. The date
+URL, e.g. `https://dhrubajitpc.github.io/techpulse-rsvp/2026-08-17/`. The date
 comes from the page's own `data-updated` stamp, not the runner's UTC clock, so
 it always matches what the page says. `site/index.html` at the root keeps being
 overwritten every week, so the root URL always serves the latest digest while
@@ -48,7 +49,7 @@ whatever is committed without spending a Copilot run — useful after editing th
 page by hand, or to get a first deploy out before the secret exists:
 
 ```bash
-gh workflow run digest.yml -R DhrubajitPC/sg-tech-events -f skip_refresh=true
+gh workflow run digest.yml -R DhrubajitPC/techpulse-rsvp -f skip_refresh=true
 ```
 
 ## Why the validator exists
@@ -93,7 +94,7 @@ organization-owned repositories, and needs an org admin to enable the
 "Allow use of Copilot CLI billed to the organization" policy. This repository is
 personal, so it uses the PAT. To enable Pages, set the repository's Pages source
 to **GitHub Actions** under **Settings > Pages**. The published site is
-https://dhrubajitpc.github.io/sg-tech-events/.
+https://dhrubajitpc.github.io/techpulse-rsvp/.
 
 ## Publishing
 
@@ -108,17 +109,31 @@ the refresh job just pushed.
 The `notify-teams` job posts an Adaptive Card to a Teams channel via a
 Power Automate "When a Teams webhook request is received" workflow, after
 `deploy` succeeds. `tools/teams-summary.mjs` reads the just-published
-`site/index.html`; the card title includes the page's `data-updated` date,
-and the body lists the soonest events (name, date, tags, up to 8) with a
-count of how many more are on the full page — the same `EVENTS` parsing
-`tools/validate.mjs` uses, shared via `tools/events.mjs`. The "Full digest"
-link points at that week's own dated archive URL (see Publishing above), not
-root, so old notifications keep linking to the right content. It requires two
-repository secrets that aren't set up by default:
+`site/index.html` — the same `EVENTS` parsing `tools/validate.mjs` uses,
+shared via `tools/events.mjs` — and builds a card with:
+
+- a header row with the TechPulse RSVP icon (`site/icon.png`) and title
+- a summary line with the event count and the page's `data-updated` date
+- an embedded Adaptive Card `Table` listing every event in the month
+  following `data-updated` (a rolling 31-day window, not the full ~8-week
+  digest), one row per event: date (`dd/mm/yyyy`), event name linked to its
+  registration page, format, and tags
+- a "Full digest" link, so anything past the one-month window is still one
+  click away
+
+The table needs Adaptive Card schema 1.5, which is what the card declares.
+The icon is a plain PNG (no external dependency to render it) hosted
+alongside the site, referenced by its published URL — it decorates the card
+content itself, not the sender avatar. The Teams message is always posted by
+the Power Automate workflow's own bot identity; changing *that* icon is a
+Teams/Power Automate workflow setting, not something this payload controls.
+The "Full digest" link points at that week's own dated archive URL (see
+Publishing above), not root, so old notifications keep linking to the right
+content. It requires two repository secrets that aren't set up by default:
 
 ```bash
-gh secret set TEAMS_WEBHOOK_URL -R DhrubajitPC/sg-tech-events
-gh secret set TEAMS_WEBHOOK_SECRET -R DhrubajitPC/sg-tech-events
+gh secret set TEAMS_WEBHOOK_URL -R DhrubajitPC/techpulse-rsvp
+gh secret set TEAMS_WEBHOOK_SECRET -R DhrubajitPC/techpulse-rsvp
 ```
 
 `TEAMS_WEBHOOK_URL` is the HTTP POST URL from the Teams-side workflow trigger.
